@@ -1,5 +1,4 @@
 import gleam/string
-import gleam/result
 import gleam/list
 import gleam/int
 import gleam/io
@@ -18,8 +17,10 @@ pub fn sum_of_numbers(contents) {
   contents
   |> string.split(on: "\n")
   |> list.map(fn(number) {
-    int.parse(number)
-    |> result.unwrap(0)
+    case int.parse(number) {
+      Ok(x) -> x
+      _ -> panic
+    }
   })
   |> int.sum()
 }
@@ -28,9 +29,11 @@ pub fn sum_of_squares(contents) {
   contents
   |> string.split(on: "\n")
   |> list.map(fn(number) {
-    int.parse(number)
-    |> result.unwrap(0)
-    |> fn(x) { x * x }
+    case int.parse(number) {
+      Ok(x) -> x
+      _ -> panic
+    }
   })
+  |> list.map(fn(x) { x * x })
   |> int.sum()
 }
