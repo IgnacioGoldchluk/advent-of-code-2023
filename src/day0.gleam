@@ -8,9 +8,7 @@ import simplifile
 const filename = "inputs/day0"
 
 pub fn day0() {
-  let contents =
-    simplifile.read(filename)
-    |> result.unwrap("")
+  let assert Ok(contents) = simplifile.read(filename)
 
   io.debug(sum_of_numbers(contents))
   io.debug(sum_of_squares(contents))
