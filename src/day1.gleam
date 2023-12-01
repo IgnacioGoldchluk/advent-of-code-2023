@@ -33,7 +33,7 @@ pub fn part2(input: String) {
 fn extract_digits(line: String) -> List(Int) {
   line
   |> string.to_graphemes()
-  |> list.map(fn(x) { int.parse(x) })
+  |> list.map(int.parse)
   |> result.values()
 }
 

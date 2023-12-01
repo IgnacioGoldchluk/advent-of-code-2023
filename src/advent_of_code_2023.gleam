@@ -18,6 +18,7 @@ fn advent_of_code(input: CommandInput) -> Nil {
   case day {
     0 -> day0.day0()
     1 -> day1.solve()
+    _ -> panic
   }
   Nil
 }
