@@ -28,7 +28,9 @@ pub fn part1(input: String) {
   input
   |> string.split(on: "\n")
   |> list.map(parse_game)
-  |> list.filter(fn(g) { g.colors.r <= 12 && g.colors.g <= 13 && g.colors.b <= 14})
+  |> list.filter(fn(g) {
+    g.colors.r <= 12 && g.colors.g <= 13 && g.colors.b <= 14
+  })
   |> list.map(fn(game) { game.game_id })
   |> int.sum()
 }
@@ -40,26 +42,36 @@ fn parse_game(input: String) {
 }
 
 fn max_colors(sets: String) {
-  let colors = list.map(["green", "red", "blue"], fn(color) {
-  let assert Ok(color_re) = regex.from_string("(\\d+) "<>color)
-  #(color, max_color(regex.scan(color_re, sets)))
-  })
-  |> map.from_list()
+  let colors =
+    list.map(
+      ["green", "red", "blue"],
+      fn(color) {
+        let assert Ok(color_re) = regex.from_string("(\\d+) " <> color)
+        #(color, max_color(regex.scan(color_re, sets)))
+      },
+    )
+    |> map.from_list()
 
   Colors(
-    r: map.get(colors, "red") |> result.unwrap(0),
-    g: map.get(colors, "green") |> result.unwrap(0),
-    b: map.get(colors, "blue") |> result.unwrap(0)
+    r: map.get(colors, "red")
+    |> result.unwrap(0),
+    g: map.get(colors, "green")
+    |> result.unwrap(0),
+    b: map.get(colors, "blue")
+    |> result.unwrap(0),
   )
 }
 
 fn max_color(matches: List(regex.Match)) -> Int {
   matches
   |> list.flat_map(fn(match) { match.submatches })
-  |> list.fold(0, fn (curr_max, submatch) {
-    let assert Ok(submatch_int) = int.parse(option.unwrap(submatch, "0"))
-    int.max(curr_max, submatch_int)
-  })
+  |> list.fold(
+    0,
+    fn(curr_max, submatch) {
+      let assert Ok(submatch_int) = int.parse(option.unwrap(submatch, "0"))
+      int.max(curr_max, submatch_int)
+    },
+  )
 }
 
 pub fn part2(input: String) {
