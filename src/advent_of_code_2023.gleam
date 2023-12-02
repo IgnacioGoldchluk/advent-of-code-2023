@@ -2,6 +2,7 @@ import glint.{type CommandInput}
 import glint/flag
 import day0
 import day1
+import day2
 import gleam/erlang.{start_arguments}
 
 const day_flag_name = "day"
@@ -18,6 +19,7 @@ fn advent_of_code(input: CommandInput) -> Nil {
   case day {
     0 -> day0.day0()
     1 -> day1.solve()
+    2 -> day2.solve()
     _ -> panic
   }
   Nil
