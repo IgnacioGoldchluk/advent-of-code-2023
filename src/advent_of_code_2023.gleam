@@ -3,6 +3,7 @@ import glint/flag
 import day0
 import day1
 import day2
+import day3
 import gleam/erlang.{start_arguments}
 
 const day_flag_name = "day"
@@ -20,6 +21,7 @@ fn advent_of_code(input: CommandInput) -> Nil {
     0 -> day0.day0()
     1 -> day1.solve()
     2 -> day2.solve()
+    3 -> day3.solve()
     _ -> panic
   }
   Nil
