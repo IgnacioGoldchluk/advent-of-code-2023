@@ -2,3 +2,6 @@
 *.ez
 build
 erl_crash.dump
+
+# People scrape input days and shouldn't be uploaded to public repositories
+inputs/day*
