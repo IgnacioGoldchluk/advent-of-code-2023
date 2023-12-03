@@ -19,7 +19,7 @@ type NumberInGrid {
 pub fn solve() {
   let assert Ok(contents) = simplifile.read(filename)
   io.debug(part1(contents))
-  // io.debug(part2(contents))
+  io.debug(part2(contents))
 }
 
 pub fn part1(input: String) {
@@ -38,11 +38,21 @@ pub fn part1(input: String) {
 
 pub fn part2(input: String) {
   let chars_with_coords = to_coords_chars(input)
-  let number = parse_numbers(chars_with_coords)
-  let special_chars =
+  let numbers = parse_numbers(chars_with_coords)
+  let gears =
     chars_with_coords
-    |> list.filter(fn(x) { !list.contains(non_special, x.1) })
-    |> map.from_list()
+    |> list.filter(fn(x) { x.1 == "*" })
+    |> list.map(fn(x) { x.0 })
+
+  gears
+  |> list.map(fn(gear_coords) { adjacent_numbers(gear_coords, numbers) })
+  |> list.filter(fn(adj_numbers) { list.length(adj_numbers) == 2 })
+  |> list.map(fn(adj_numbers) {
+    adj_numbers
+    |> list.map(fn(n) { n.number })
+    |> int.product()
+  })
+  |> int.sum()
 }
 
 fn to_coords_chars(input: String) -> List(#(#(Int, Int), String)) {
@@ -109,7 +119,7 @@ fn contiguous_coord(coord1: #(Int, Int), coord2: #(Int, Int)) {
 fn adjacent_to_chars(coords, chars_map) {
   coords
   |> list.flat_map(adjacent_coords)
-  |> list.any(fn(c) { has_symbol(c, chars_map) })
+  |> list.any(fn(c) { map.has_key(chars_map, c) })
 }
 
 fn adjacent_coords(coord) {
@@ -126,6 +136,13 @@ fn adjacent_coords(coord) {
   ]
 }
 
-fn has_symbol(coord, symbols) {
-  map.has_key(symbols, coord)
+fn adjacent_numbers(gear_coords, numbers: List(NumberInGrid)) {
+  let adjacent_gear_coords = adjacent_coords(gear_coords)
+  numbers
+  |> list.filter(fn(number) {
+    list.any(
+      number.coords,
+      fn(coord) { list.contains(adjacent_gear_coords, coord) },
+    )
+  })
 }
