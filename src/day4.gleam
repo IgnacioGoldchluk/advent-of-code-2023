@@ -67,31 +67,23 @@ fn accumulate_cards(cards: List(Card)) {
     |> list.map(fn(c) { #(c.card_id, 1) })
     |> map.from_list()
 
-  cards
-  |> list.fold(
-    from: count,
-    with: fn(acc, card) {
-      let assert Ok(copies) = map.get(acc, card.card_id)
+  list.fold(over: cards, from: count, with: update_copies)
+}
 
-      card
-      |> copies_range()
-      |> list.fold(
-        acc,
-        fn(acc, idx) {
-          map.update(
-            acc,
-            idx,
-            fn(val) {
-              case val {
-                option.Some(i) -> i + copies
-                _ -> panic
-              }
-            },
-          )
-        },
-      )
-    },
-  )
+fn update_copies(acc, card: Card) {
+  let assert Ok(copies) = map.get(acc, card.card_id)
+  let add_copies = fn(x) { add_or_panic(x, copies) }
+
+  card
+  |> copies_range()
+  |> list.fold(acc, fn(new_acc, idx) { map.update(new_acc, idx, add_copies) })
+}
+
+fn add_or_panic(val, copies) {
+  case val {
+    option.Some(i) -> i + copies
+    _ -> panic
+  }
 }
 
 fn copies_range(card: Card) {
