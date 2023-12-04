@@ -32,7 +32,9 @@ pub fn part2(input: String) {
   input
   |> string.split(on: "\n")
   |> list.map(to_cards)
-  |> accumulate_cards
+  |> accumulate_cards()
+  |> map.values()
+  |> int.sum()
 }
 
 fn to_cards(input: String) {
@@ -47,13 +49,10 @@ fn to_cards(input: String) {
 }
 
 fn as_numbers(numbers: String) {
-  let assert Ok(n) =
-    numbers
-    |> string.split(" ")
-    |> list.filter(fn(x) { !string.is_empty(x) })
-    |> list.try_map(int.parse)
-
-  set.from_list(n)
+  numbers
+  |> string.split(" ")
+  |> list.filter(fn(x) { !string.is_empty(x) })
+  |> set.from_list()
 }
 
 fn to_points(card: Card) {
@@ -94,8 +93,6 @@ fn accumulate_cards(cards: List(Card)) {
       )
     },
   )
-  |> map.values()
-  |> int.sum()
 }
 
 fn copies_range(card: Card) {
