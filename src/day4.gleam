@@ -5,6 +5,7 @@ import gleam/io
 import gleam/set
 import gleam/map
 import gleam/option
+import gleam/regex
 import simplifile
 
 const filename = "inputs/day4"
@@ -42,16 +43,14 @@ fn to_cards(input: String) {
   let assert Ok(card_id) = int.parse(string.trim(card_id))
   let [winners, drawn] = string.split(numbers, " | ")
 
-  let overlapping =
-    set.intersection(as_numbers(winners), as_numbers(drawn))
-    |> set.size()
-  Card(card_id: card_id, overlapping_nums: overlapping)
+  let total = set.size(set.intersection(as_numbers(winners), as_numbers(drawn)))
+  Card(card_id: card_id, overlapping_nums: total)
 }
 
 fn as_numbers(numbers: String) {
-  numbers
-  |> string.split(" ")
-  |> list.filter(fn(x) { !string.is_empty(x) })
+  let assert Ok(re) = regex.from_string("\\s+")
+
+  regex.split(re, numbers)
   |> set.from_list()
 }
 
