@@ -148,7 +148,8 @@ fn extract_ranges(range: SeedsRange, mapping: Mapping) {
       fully_contains(range, mapping)
     SeedsRange(start: s, end: e) if s < start && e <= end ->
       partial_start_overlap(range, mapping)
-    SeedsRange(start: s, end: e) if s >= start && e > end -> partial_end_overlap(range, mapping)
+    SeedsRange(start: s, end: e) if s >= start && e > end ->
+      partial_end_overlap(range, mapping)
     _ -> panic
   }
 }
