@@ -2,10 +2,13 @@ import gleam/string
 import gleam/io
 import gleam/list
 import gleam/int
-import gleam/iterator
 import simplifile
 
 const filename = "inputs/day5"
+
+type SeedsRange {
+  SeedsRange(start: Int, end: Int)
+}
 
 type Mapping {
   Mapping(source: Int, destination: Int, range: Int)
@@ -38,32 +41,28 @@ pub fn part1(input: String) {
 
 pub fn part2(input: String) {
   let assert [seeds, ..mapping_steps] = string.split(input, "\n\n")
-  let seeds_iterator = seeds_numbers_range(seeds)
+  let seeds = seeds_ranges(seeds)
 
   let mapping_steps = list.map(mapping_steps, to_mapping_step)
 
-  let assert Ok(min) =
-    seeds_iterator
-    |> iterator.map(fn(seed) { to_location_value(seed, mapping_steps) })
-    |> iterator.reduce(int.min)
+  let assert Ok(min_val) =
+    seeds
+    |> list.map(io.debug)
+    |> list.flat_map(fn(seed) { to_location_ranges(seed, mapping_steps) })
+    |> list.map(fn(seed_range) { seed_range.start })
+    |> list.reduce(int.min)
 
-  min
+  min_val
 }
 
-fn seeds_numbers_range(seeds: String) {
-  let assert Ok(int_seeds) =
-    seeds
-    |> string.replace("seeds: ", "")
-    |> string.split(" ")
-    |> list.try_map(int.parse)
-
+fn seeds_ranges(seeds) {
+  let assert Ok(int_seeds) = seeds_numbers(seeds)
   int_seeds
   |> list.sized_chunk(2)
   |> list.map(fn(start_range) {
     let assert [start, range] = start_range
-    iterator.range(start, start + range)
+    SeedsRange(start: start, end: start + range)
   })
-  |> iterator.concat()
 }
 
 fn seeds_numbers(seeds: String) {
@@ -113,4 +112,8 @@ fn to_location_value(seed: Int, mapping_steps: List(MappingStep)) {
       }
     },
   )
+}
+
+fn to_location_ranges(seed: SeedsRange, mapping_steps: List(MappingStep)) {
+  list.fold(mapping_steps, [[seed], []], fn(acc, mapping_step) { todo })
 }
