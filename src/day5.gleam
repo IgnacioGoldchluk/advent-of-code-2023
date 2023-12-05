@@ -2,6 +2,7 @@ import gleam/string
 import gleam/io
 import gleam/list
 import gleam/int
+import gleam/iterator
 import simplifile
 
 const filename = "inputs/day5"
@@ -18,6 +19,7 @@ pub fn solve() {
   let assert Ok(contents) = simplifile.read(filename)
 
   io.debug(part1(contents))
+  io.debug(part2(contents))
 }
 
 pub fn part1(input: String) {
@@ -32,6 +34,36 @@ pub fn part1(input: String) {
     |> list.reduce(int.min)
 
   min
+}
+
+pub fn part2(input: String) {
+  let assert [seeds, ..mapping_steps] = string.split(input, "\n\n")
+  let seeds_iterator = seeds_numbers_range(seeds)
+
+  let mapping_steps = list.map(mapping_steps, to_mapping_step)
+
+  let assert Ok(min) =
+    seeds_iterator
+    |> iterator.map(fn(seed) { to_location_value(seed, mapping_steps) })
+    |> iterator.reduce(int.min)
+
+  min
+}
+
+fn seeds_numbers_range(seeds: String) {
+  let assert Ok(int_seeds) =
+    seeds
+    |> string.replace("seeds: ", "")
+    |> string.split(" ")
+    |> list.try_map(int.parse)
+
+  int_seeds
+  |> list.sized_chunk(2)
+  |> list.map(fn(start_range) {
+    let assert [start, range] = start_range
+    iterator.range(start, start + range)
+  })
+  |> iterator.concat()
 }
 
 fn seeds_numbers(seeds: String) {
