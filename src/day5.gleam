@@ -63,6 +63,22 @@ fn to_mapping(range: String) {
   Mapping(source: src, destination: dest, range: steps)
 }
 
-fn to_location_value(seed, mapping_steps) {
-  123
+fn to_location_value(seed: Int, mapping_steps: List(MappingStep)) {
+  list.fold(
+    mapping_steps,
+    seed,
+    fn(val, mapping_step) {
+      let match =
+        mapping_step.mappings
+        |> list.filter(fn(mapping) {
+          val >= mapping.source && val <= mapping.source + mapping.range
+        })
+        |> list.first()
+
+      case match {
+        Error(_) -> val
+        Ok(mapping) -> val - mapping.source + mapping.destination
+      }
+    },
+  )
 }
