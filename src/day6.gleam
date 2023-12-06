@@ -5,6 +5,7 @@ import gleam/string
 import gleam/list
 import gleam/regex
 import gleam/result
+import gleam/float
 
 const filename = "inputs/day6"
 
@@ -24,14 +25,25 @@ pub fn part1(input: String) {
 }
 
 pub fn part2(input: String) {
-  let assert [t, r] =
+  let assert [[time], [record]] =
     input
     |> string.split("\n")
     |> list.map(to_single_number)
 
-  list.zip(t, r)
-  |> list.map(beating_records)
-  |> int.product()
+  let a = -1.0
+  let b = int.to_float(time)
+  let c = int.to_float(-record)
+
+  let assert Ok(disc) = float.square_root(b *. b -. 4.0 *. a *. c)
+
+  let r1 =
+    float.ceiling({ b -. disc } /. 2.0)
+    |> float.round()
+  let r2 =
+    float.floor({ b +. disc } /. 2.0)
+    |> float.round()
+
+  r2 - r1 + 1
 }
 
 fn to_single_number(number: String) {
