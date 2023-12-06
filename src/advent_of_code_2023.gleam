@@ -6,6 +6,7 @@ import day2
 import day3
 import day4
 import day5
+import day6
 import gleam/erlang.{start_arguments}
 
 const day_flag_name = "day"
@@ -26,6 +27,7 @@ fn advent_of_code(input: CommandInput) -> Nil {
     3 -> day3.solve()
     4 -> day4.solve()
     5 -> day5.solve()
+    6 -> day6.solve()
     _ -> panic
   }
   Nil

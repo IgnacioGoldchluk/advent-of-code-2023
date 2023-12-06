@@ -1,7 +1,7 @@
 import day5
 import gleeunit/should
 
-pub fn day4_part1_test() {
+pub fn day5_part1_test() {
   let test_input =
     "seeds: 79 14 55 13
 
