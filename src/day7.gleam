@@ -29,8 +29,11 @@ pub fn part1(input: String) {
   input
   |> string.split(on: "\n")
   |> list.map(string.trim)
+  |> list.filter(fn(s) { !string.is_empty(s) })
   |> list.map(to_hand)
   |> list.sort(by: compare_hands)
+  |> list.index_map(fn(idx, h) { { idx + 1 } * h.bid })
+  |> int.sum()
 }
 
 fn to_hand(hand: String) {
@@ -75,15 +78,33 @@ fn index_of(element, a_list) {
 fn compare_hand_types(ht1: String, ht2: String) {
   let assert Ok(v1) = index_of(ht1, hand_types)
   let assert Ok(v2) = index_of(ht2, hand_types)
+  int.compare(v1, v2)
+}
 
-  case #(v1, v2) {
-    #(_x, _x) -> order.Eq
-    #(x, y) if x > y -> order.Gt
-    _ -> order.Lt
-  }
+fn compare_card(c1, c2) {
+  let assert Ok(cv1) = index_of(c1, card_vals)
+  let assert Ok(cv2) = index_of(c2, card_vals)
+  int.compare(cv1, cv2)
+}
+
+fn compare_cards_values(cs1: List(String), cs2: List(String)) {
+  list.zip(cs1, cs2)
+  |> list.fold_until(
+    order.Eq,
+    fn(_, cards) {
+      let assert #(c1, c2) = cards
+      case compare_card(c1, c2) {
+        order.Eq -> list.Continue(order.Eq)
+        lt_or_gt -> list.Stop(lt_or_gt)
+      }
+    },
+  )
 }
 
 fn compare_hands(h1: Hand, h2: Hand) {
-  let hand_types = compare_hand_types(h1.hand_type, h2.hand_type)
-  let card_vals = compare_card_values(h1.cards, h2.cards)
+  let hand_cmp = compare_hand_types(h1.hand_type, h2.hand_type)
+  case hand_cmp {
+    order.Eq -> compare_cards_values(h1.cards, h2.cards)
+    gt_or_lt -> gt_or_lt
+  }
 }
