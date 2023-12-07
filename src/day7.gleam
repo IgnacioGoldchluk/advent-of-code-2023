@@ -3,18 +3,16 @@ import gleam/io
 import gleam/int
 import gleam/string
 import gleam/list
-import gleam/regex
-import gleam/result
 import gleam/map
-import gleam/float
+import gleam/order
 
-const filename = "inputs/day6"
+const filename = "inputs/day7"
 
 const card_vals = [
-  "A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2",
+  "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A",
 ]
 
-const hand_types = ["fives", "fours", "full", "threes", "twos", "pair", "high"]
+const hand_types = ["high", "pair", "twos", "threes", "full", "fours", "fives"]
 
 type Hand {
   Hand(cards: List(String), bid: Int, hand_type: String)
@@ -62,6 +60,30 @@ fn calculate_hand_type(cards: List(String)) {
   }
 }
 
+fn index_of(element, a_list) {
+  a_list
+  |> list.index_map(fn(i, v) { #(i, v) })
+  |> list.find_map(fn(i_v) {
+    let assert #(i, v) = i_v
+    case v {
+      c if c == element -> Ok(i)
+      _ -> Error(Nil)
+    }
+  })
+}
+
+fn compare_hand_types(ht1: String, ht2: String) {
+  let assert Ok(v1) = index_of(ht1, hand_types)
+  let assert Ok(v2) = index_of(ht2, hand_types)
+
+  case #(v1, v2) {
+    #(_x, _x) -> order.Eq
+    #(x, y) if x > y -> order.Gt
+    _ -> order.Lt
+  }
+}
+
 fn compare_hands(h1: Hand, h2: Hand) {
-  todo
+  let hand_types = compare_hand_types(h1.hand_type, h2.hand_type)
+  let card_vals = compare_card_values(h1.cards, h2.cards)
 }
