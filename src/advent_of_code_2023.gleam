@@ -9,8 +9,11 @@ import day5
 import day6
 import day7
 import gleam/erlang.{start_arguments}
+import create_template
 
 const day_flag_name = "day"
+
+const new_day_flag_name = "new-day"
 
 fn day_flag() -> flag.FlagBuilder(Int) {
   flag.int()
@@ -18,8 +21,21 @@ fn day_flag() -> flag.FlagBuilder(Int) {
   |> flag.description("The day to run")
 }
 
+fn new_day_flag() -> flag.FlagBuilder(Int) {
+  flag.int()
+  |> flag.default(-1)
+  |> flag.description("Template for a new day")
+}
+
 fn advent_of_code(input: CommandInput) -> Nil {
   let assert Ok(day) = flag.get_int(from: input.flags, for: day_flag_name)
+  let assert Ok(new_day) =
+    flag.get_int(from: input.flags, for: new_day_flag_name)
+
+  case new_day {
+    x if x <= 25 && x >= 1 -> create_template.new_day(new_day)
+    _ -> Ok(Nil)
+  }
 
   case day {
     0 -> day0.day0()
@@ -44,6 +60,7 @@ pub fn main() {
     at: [],
     do: glint.command(advent_of_code)
     |> glint.flag(day_flag_name, day_flag())
+    |> glint.flag(new_day_flag_name, new_day_flag())
     |> glint.description("Runs AoC with the specified day"),
   )
   |> glint.run(start_arguments())
