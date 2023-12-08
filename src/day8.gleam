@@ -6,6 +6,8 @@ import gleam/map
 import gleam/pair
 import gleam_community/maths/arithmetics
 import gleam/iterator
+import gleam/regex
+import gleam/option
 
 const filename = "inputs/day8"
 
@@ -77,22 +79,16 @@ fn steps_required(nodes, instructions, start, end_fn) {
 fn to_nodes(nodes: String) {
   nodes
   |> string.split("\n")
-  |> list.fold(
-    map.new(),
-    fn(acc, new_node) {
-      let assert [node, left, right] = get_node(new_node)
-      map.insert(acc, node, Node(left: left, right: right))
-    },
-  )
+  |> list.fold(map.new(), insert_node)
+}
+
+fn insert_node(map_of_nodes, new_node) {
+  let assert [node, left, right] = get_node(new_node)
+  map.insert(map_of_nodes, node, Node(left: left, right: right))
 }
 
 fn get_node(node) {
-  let assert [node_name, l_r] = string.split(node, " = ")
-  let assert [l, r] =
-    l_r
-    |> string.replace("(", "")
-    |> string.replace(")", "")
-    |> string.split(", ")
-
-  [node_name, l, r]
+  let assert Ok(re) = regex.from_string("(\\w+) = \\((\\w+), (\\w+)\\)")
+  let assert [regex.Match(submatches: submatches, ..)] = regex.scan(re, node)
+  option.values(submatches)
 }
