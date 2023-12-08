@@ -3,6 +3,8 @@ import gleam/io
 import gleam/string
 import gleam/list
 import gleam/map
+import gleam/pair
+import gleam_community/maths/arithmetics
 import gleam/iterator
 
 const filename = "inputs/day8"
@@ -14,10 +16,10 @@ type Node {
 pub fn solve() {
   let assert Ok(contents) = simplifile.read(filename)
   io.debug(part1(contents))
-  // io.debug(part2(contents))
+  io.debug(part2(contents))
 }
 
-pub fn part1(input: String) {
+fn instructions_and_nodes(input: String) {
   let assert [instructions, nodes] = string.split(input, "\n\n")
   let instructions =
     string.to_graphemes(instructions)
@@ -25,12 +27,33 @@ pub fn part1(input: String) {
     |> iterator.cycle()
 
   let nodes = to_nodes(nodes)
-
-  let assert #(c, _) = steps_required(nodes, instructions, "AAA", "ZZZ")
-  c
+  #(instructions, nodes)
 }
 
-fn steps_required(nodes, instructions, start, end) {
+pub fn part1(input: String) {
+  let end_fn = fn(node) { node == "ZZZ" }
+  let assert #(instructions, nodes) = instructions_and_nodes(input)
+  steps_required(nodes, instructions, "AAA", end_fn)
+}
+
+pub fn part2(input: String) {
+  let assert #(instructions, nodes) = instructions_and_nodes(input)
+
+  let end_fn = fn(node) { string.ends_with(node, "Z") }
+
+  let starting_nodes =
+    map.keys(nodes)
+    |> list.filter(fn(node) { string.ends_with(node, "A") })
+
+  let assert Ok(result) =
+    starting_nodes
+    |> list.map(fn(node) { steps_required(nodes, instructions, node, end_fn) })
+    |> list.reduce(arithmetics.lcm)
+
+  result
+}
+
+fn steps_required(nodes, instructions, start, end_fn) {
   instructions
   |> iterator.fold_until(
     #(0, start),
@@ -42,12 +65,13 @@ fn steps_required(nodes, instructions, start, end) {
         "R" -> r
       }
 
-      case new {
-        x if x == end -> list.Stop(#(count + 1, new))
-        new -> list.Continue(#(count + 1, new))
+      case end_fn(new) {
+        True -> list.Stop(#(count + 1, new))
+        False -> list.Continue(#(count + 1, new))
       }
     },
   )
+  |> pair.first()
 }
 
 fn to_nodes(nodes: String) {
@@ -72,6 +96,3 @@ fn get_node(node) {
 
   [node_name, l, r]
 }
-// pub fn part2(input: String) {
-//   todo
-// }
