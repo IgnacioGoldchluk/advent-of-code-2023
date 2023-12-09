@@ -18,7 +18,7 @@ const new_day_flag_name = "new-day"
 
 fn day_flag() -> flag.FlagBuilder(Int) {
   flag.int()
-  |> flag.default(0)
+  |> flag.default(-1)
   |> flag.description("The day to run")
 }
 
@@ -39,6 +39,7 @@ fn advent_of_code(input: CommandInput) -> Nil {
   }
 
   case day {
+    -1 -> -1
     0 -> day0.day0()
     1 -> day1.solve()
     2 -> day2.solve()
