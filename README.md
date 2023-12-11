@@ -1,22 +1,11 @@
-# advent_of_code_2023
-
-[![Package Version](https://img.shields.io/hexpm/v/advent_of_code_2023)](https://hex.pm/packages/advent_of_code_2023)
-[![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/advent_of_code_2023/)
+# Advent of Code 2023 in Gleam
 
 ## Quick start
 
 ```sh
-gleam run   # Run the project
+gleam run -- --day=${DAY_NUMBER} # Run the project for a specific day
+gleam run -- --new-day=${DAY_NUMBER} # Creates a template (src + test + input) for a new day
 gleam test  # Run the tests
-gleam shell # Run an Erlang shell
 ```
 
-## Installation
-
-If available on Hex this package can be added to your Gleam project:
-
-```sh
-gleam add advent_of_code_2023
-```
-
-and its documentation can be found at <https://hexdocs.pm/advent_of_code_2023>.
+To test with your Advent of Code input, create the corresponding day file in `inputs/day${DAY_NUMBER}`.
