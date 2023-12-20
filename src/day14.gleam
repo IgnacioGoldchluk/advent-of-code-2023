@@ -5,7 +5,7 @@ import gleam/string
 import gleam/list
 import gleam/pair
 import gleam/int
-import gleam/order
+// import gleam/order
 
 type Shape {
   RoundedRock
@@ -35,31 +35,31 @@ fn to_shape(shape: String) {
   }
 }
 
-fn shape_to_grapheme(shape: Shape){
-  case shape {
-    CubedRock -> "#"
-    EmptySpace -> "."
-    RoundedRock -> "O"
-  }
-}
+// fn shape_to_grapheme(shape: Shape){
+//   case shape {
+//     CubedRock -> "#"
+//     EmptySpace -> "."
+//     RoundedRock -> "O"
+//   }
+// }
 
-fn sort_coords(coord1, coord2) {
-  let assert #(x1, y1) = coord1
-  let assert #(x2, y2) = coord2
-  case int.compare(x1, x2) {
-    order.Eq -> int.compare(y1, y2)
-    other -> other
-  }
-}
+// fn sort_coords(coord1, coord2) {
+//   let assert #(x1, y1) = coord1
+//   let assert #(x2, y2) = coord2
+//   case int.compare(x1, x2) {
+//     order.Eq -> int.compare(y1, y2)
+//     other -> other
+//   }
+// }
 
-fn to_string(grid: Grid) {
-  grid
-  |> map.to_list()
-  |> list.sort(fn(c1, c2) { sort_coords(pair.first(c1), pair.first(c2))})
-  |> list.map(pair.second)
-  |> list.map(shape_to_grapheme)
-  |> string.join("")
-}
+// fn to_string(grid: Grid) {
+//   grid
+//   |> map.to_list()
+//   |> list.sort(fn(c1, c2) { sort_coords(pair.first(c1), pair.first(c2))})
+//   |> list.map(pair.second)
+//   |> list.map(shape_to_grapheme)
+//   |> string.join("")
+// }
 
 fn to_grid(input: String) -> Grid {
   input
@@ -132,6 +132,3 @@ pub fn part1(input: String) {
 // pub fn part2(input: String) {
 //   todo
 // }
-
-
-// 1_000_000_000
