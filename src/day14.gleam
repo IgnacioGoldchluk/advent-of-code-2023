@@ -5,6 +5,7 @@ import gleam/string
 import gleam/list
 import gleam/pair
 import gleam/int
+
 // import gleam/order
 
 type Shape {
@@ -95,7 +96,7 @@ fn move_rocks_north(grid: Grid) -> Grid {
 
 fn move_rounded_rock_north(grid: Grid, coords: Point) -> Grid {
   let assert #(row_idx, col_idx) = coords
-  case map.get(grid, #(row_idx-1, col_idx)) {
+  case map.get(grid, #(row_idx - 1, col_idx)) {
     Ok(EmptySpace) -> {
       let new_grid =
         grid
@@ -116,7 +117,7 @@ fn calculate_load(grid: Grid) -> Int {
     |> list.reduce(int.max)
 
   grid
-  |> map.filter(fn(_k, v) { v == RoundedRock})
+  |> map.filter(fn(_k, v) { v == RoundedRock })
   |> map.keys()
   |> list.map(pair.first)
   |> list.map(fn(row_idx) { length + 1 - row_idx })
