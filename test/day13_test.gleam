@@ -23,9 +23,24 @@ pub fn day13_part1_test() {
   |> should.equal(405)
 }
 
-// pub fn day13_part2_test() {
-//   let test_input = ""
+pub fn day13_part2_test() {
+  let test_input =
+    "#.##..##.
+..#.##.#.
+##......#
+##......#
+..#.##.#.
+..##..##.
+#.#.##.#.
 
-//   day13.part2(test_input)
-//   |> should.equal(123)
-// }
+#...##..#
+#....#..#
+..##..###
+#####.##.
+#####.##.
+..##..###
+#....#..#"
+
+  day13.part2(test_input)
+  |> should.equal(400)
+}
