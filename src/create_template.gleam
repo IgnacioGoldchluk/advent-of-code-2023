@@ -15,6 +15,8 @@ fn create_day_file(day: Int) {
   let contents =
     "import simplifile
 import gleam/io
+import gleam/string
+import gleam/list
 
 const filename = \"inputs/day{num}\"
 pub fn solve() {

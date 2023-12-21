@@ -12,6 +12,7 @@ import day8
 import day9
 import day10
 import day11
+import day13
 import day14
 import gleam/erlang.{start_arguments}
 import create_template
@@ -56,6 +57,7 @@ fn advent_of_code(input: CommandInput) -> Nil {
     9 -> day9.solve()
     10 -> day10.solve()
     11 -> day11.solve()
+    13 -> day13.solve()
     14 -> day14.solve()
     _ -> panic
   }
