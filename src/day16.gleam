@@ -121,8 +121,7 @@ fn count_energized(grid, starting_beam) {
 }
 
 pub fn part1(input: String) {
-  let grid = to_grid(input)
-  count_energized(grid, #(#(0, 0), Right))
+  count_energized(to_grid(input), #(#(0, 0), Right))
 }
 
 // For part 2 one should actually do as follows:
@@ -150,20 +149,12 @@ fn max_row_col(grid) {
 }
 
 fn edges(grid) {
-  let #(max_row, max_col) = max_row_col(grid)
+  let #(m_r, m_c) = max_row_col(grid)
 
-  let top_row =
-    list.range(0, max_col)
-    |> list.map(fn(c) { #(0, c) })
-  let bottom_row =
-    list.range(0, max_col)
-    |> list.map(fn(c) { #(max_row, c) })
-  let first_col =
-    list.range(0, max_row)
-    |> list.map(fn(r) { #(r, 0) })
-  let last_col =
-    list.range(0, max_row)
-    |> list.map(fn(r) { #(r, max_col) })
+  let top_row = list.map(list.range(0, m_c), fn(c) { #(0, c) })
+  let bottom_row = list.map(list.range(0, m_c), fn(c) { #(m_r, c) })
+  let first_col = list.map(list.range(0, m_r), fn(r) { #(r, 0) })
+  let last_col = list.map(list.range(0, m_r), fn(r) { #(r, m_c) })
 
   list.concat([top_row, bottom_row, first_col, last_col])
 }
