@@ -1,11 +1,11 @@
 import simplifile
 import gleam/io
-import gleam/string
 import gleam/list
 import gleam/map
 import gleam/set
 import gleam/int
 import gleam/pair
+import grid_map
 
 type Direction {
   Up
@@ -47,18 +47,6 @@ fn to_tile(grapheme) {
     "|" -> VerticalSplitter
     "-" -> HorizontalSplitter
   }
-}
-
-fn to_grid(input: String) -> Grid {
-  input
-  |> string.split("\n")
-  |> list.index_map(fn(row_idx, row) {
-    row
-    |> string.to_graphemes()
-    |> list.index_map(fn(col_idx, p) { #(#(row_idx, col_idx), to_tile(p)) })
-  })
-  |> list.flatten()
-  |> map.from_list()
 }
 
 fn next_beams(beam: Beam, tile: Tile) {
@@ -121,7 +109,7 @@ fn count_energized(grid, starting_beam) {
 }
 
 pub fn part1(input: String) {
-  count_energized(to_grid(input), #(#(0, 0), Right))
+  count_energized(grid_map.parse(input, to_tile), #(#(0, 0), Right))
 }
 
 // For part 2 one should actually do as follows:
@@ -160,7 +148,7 @@ fn edges(grid) {
 }
 
 pub fn part2(input: String) {
-  let grid = to_grid(input)
+  let grid = grid_map.parse(input, to_tile)
   let directions = [Up, Down, Left, Right]
 
   let assert Ok(max) =

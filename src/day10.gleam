@@ -1,10 +1,10 @@
 import simplifile
 import gleam/io
-import gleam/string
 import gleam/list
 import gleam/map
 import gleam/int
 import gleam/set
+import grid_map
 
 const filename = "inputs/day10"
 
@@ -49,18 +49,6 @@ fn to_point(grapheme: String) {
     "F" -> FShape
     "S" -> Starting
   }
-}
-
-fn to_grid(input: String) -> Grid {
-  input
-  |> string.split("\n")
-  |> list.index_map(fn(row_idx, row) {
-    row
-    |> string.to_graphemes()
-    |> list.index_map(fn(col_idx, p) { #(#(row_idx, col_idx), to_point(p)) })
-  })
-  |> list.flatten()
-  |> map.from_list()
 }
 
 fn find_starting_point(grid: Grid) -> Coord {
@@ -171,7 +159,7 @@ fn raycast(coord: Coord, points: set.Set(Coord), grid) -> Bool {
 }
 
 pub fn part1(input: String) {
-  let grid = to_grid(input)
+  let grid = grid_map.parse(input, to_point)
   let starting_point = find_starting_point(grid)
 
   let assert #(_sd, #(count, _points, _fd)) = get_result(starting_point, grid)
@@ -180,7 +168,7 @@ pub fn part1(input: String) {
 }
 
 pub fn part2(input: String) {
-  let grid = to_grid(input)
+  let grid = grid_map.parse(input, to_point)
   let starting_point = find_starting_point(grid)
 
   let result = get_result(starting_point, grid)

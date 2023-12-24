@@ -1,10 +1,10 @@
 import simplifile
 import gleam/io
 import gleam/list
-import gleam/string
 import gleam/map
 import gleam/int
 import gleam/pair
+import grid_map
 
 const filename = "inputs/day11"
 
@@ -23,18 +23,6 @@ pub fn solve() {
   let assert Ok(contents) = simplifile.read(filename)
   io.debug(part1(contents))
   io.debug(part2(contents))
-}
-
-fn to_grid(input: String) {
-  input
-  |> string.split("\n")
-  |> list.index_map(fn(row_idx, row) {
-    row
-    |> string.to_graphemes()
-    |> list.index_map(fn(col_idx, p) { #(#(row_idx, col_idx), to_point(p)) })
-  })
-  |> list.flatten()
-  |> map.from_list()
 }
 
 fn to_point(grapheme: String) {
@@ -113,7 +101,7 @@ fn galaxies(space: Space) -> List(Coord) {
 }
 
 pub fn solution(input: String, empty_galaxies_width) {
-  let space = to_grid(input)
+  let space = grid_map.parse(input, to_point)
   let assert #(empty_rows, empty_cols) = empty_rows_and_cols(space)
 
   space

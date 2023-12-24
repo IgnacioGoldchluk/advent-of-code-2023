@@ -1,18 +1,12 @@
 import simplifile
 import gleam/io
-import gleam/string
 import gleam/list
 import gleam/int
 import gleam/map
 import gleam/pair
 import gleam/set
 import heap_queue
-
-type Coord =
-  #(Int, Int)
-
-type Grid =
-  map.Map(Coord, Int)
+import grid_map
 
 const filename = "inputs/day17"
 
@@ -22,19 +16,9 @@ pub fn solve() {
   io.debug(part2(contents))
 }
 
-fn to_grid(input: String) -> Grid {
-  input
-  |> string.split("\n")
-  |> list.index_map(fn(row_idx, row) {
-    row
-    |> string.to_graphemes()
-    |> list.index_map(fn(col_idx, v) {
-      let assert Ok(heat) = int.parse(v)
-      #(#(row_idx, col_idx), heat)
-    })
-  })
-  |> list.flatten()
-  |> map.from_list()
+fn parse_heat(heat: String) {
+  let assert Ok(h) = int.parse(heat)
+  h
 }
 
 fn destination(grid) {
@@ -167,13 +151,13 @@ fn shortest_path_2(grid, dest) {
 }
 
 pub fn part1(input: String) {
-  let grid = to_grid(input)
+  let grid = grid_map.parse(input, parse_heat)
 
   shortest_path(grid, destination(grid))
 }
 
 pub fn part2(input: String) {
-  let grid = to_grid(input)
+  let grid = grid_map.parse(input, parse_heat)
 
   shortest_path_2(grid, destination(grid))
 }
