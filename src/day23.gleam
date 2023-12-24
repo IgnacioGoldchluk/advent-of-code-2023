@@ -102,11 +102,7 @@ fn valid_movements(pos: Coord, grid: Grid, seen: Result(SetPath, Nil)) {
   |> list.map(fn(m) { #(m, set.insert(seen, m)) })
 }
 
-fn calculate_longest(
-  grid: Grid,
-  positions: List(Coord),
-  paths: SetPaths,
-) {
+fn calculate_longest(grid: Grid, positions: List(Coord), paths: SetPaths) {
   case positions {
     [] -> paths
     unseen_pos -> {
@@ -122,10 +118,7 @@ fn calculate_longest(
             let assert #(pos, prev) = pos_seen
             let prev_size = set.size(prev)
             case map.get(new_paths, pos) {
-              Error(_) -> #(
-                [pos, ..new_p],
-                map.insert(new_paths, pos, prev),
-              )
+              Error(_) -> #([pos, ..new_p], map.insert(new_paths, pos, prev))
               Ok(seen) -> {
                 case set.size(seen) {
                   v if v > prev_size -> #(new_p, new_paths)
