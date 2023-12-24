@@ -99,14 +99,13 @@ fn valid_movements(pos: Coord, grid: Grid, seen: Result(SetPath, Nil)) {
       }
     }
   })
-  |> list.map(fn(m) { #(m, seen) })
+  |> list.map(fn(m) { #(m, set.insert(seen, m)) })
 }
 
 fn calculate_longest(
   grid: Grid,
   positions: List(Coord),
   paths: SetPaths,
-  acc: Int,
 ) {
   case positions {
     [] -> paths
@@ -121,24 +120,25 @@ fn calculate_longest(
           fn(positions_paths, pos_seen) {
             let assert #(new_p, new_paths) = positions_paths
             let assert #(pos, prev) = pos_seen
+            let prev_size = set.size(prev)
             case map.get(new_paths, pos) {
               Error(_) -> #(
                 [pos, ..new_p],
-                map.insert(new_paths, pos, set.insert(prev, pos)),
+                map.insert(new_paths, pos, prev),
               )
               Ok(seen) -> {
                 case set.size(seen) {
-                  v if v > acc -> #(new_p, new_paths)
-                  v if v <= acc -> #(
+                  v if v > prev_size -> #(new_p, new_paths)
+                  v if v <= prev_size -> #(
                     [pos, ..new_p],
-                    map.insert(new_paths, pos, set.insert(prev, pos)),
+                    map.insert(new_paths, pos, prev),
                   )
                 }
               }
             }
           },
         )
-      calculate_longest(grid, new_positions, new_paths_sets, acc + 1)
+      calculate_longest(grid, new_positions, new_paths_sets)
     }
   }
 }
@@ -148,7 +148,7 @@ fn longest_path(grid: Grid) {
   let start = [start_coords]
   let paths = map.from_list([#(start_coords, set.from_list([start_coords]))])
 
-  let all_paths = calculate_longest(grid, start, paths, 0)
+  let all_paths = calculate_longest(grid, start, paths)
 
   let assert Ok(dist) = map.get(all_paths, dest_coords)
   // Subtract one because it counts the initial tile
