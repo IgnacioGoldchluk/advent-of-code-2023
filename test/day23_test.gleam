@@ -30,8 +30,6 @@ pub fn day23_part1_test() {
   day23.part1(test_input)
   |> should.equal(94)
 }
-
-
 // pub fn day23_part2_test() {
 //   let test_input =
 //     "#.#####################
